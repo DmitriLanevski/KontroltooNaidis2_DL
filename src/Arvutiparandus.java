@@ -31,7 +31,7 @@ public class Arvutiparandus {
                             System.out.println(arvuti.arvutiToString());
                         } catch (FormaadiErind e) {
                             System.out.println(e.toString());
-                            throw new RuntimeException(e);
+                            //throw new RuntimeException(e);
                         }
                     }
                 }
@@ -51,25 +51,7 @@ public class Arvutiparandus {
         LocalDateTime registreerimiseKuupäev = null;
 
         if (!tooKirjeldus.contains(";") && !tooKirjeldus.contains("|")){
-            if (erindiPositsioon < 0){
-                erindiPositsioon = 1;
-                throw new FormaadiErind(tooKirjeldus, 1);
-            }
-            tootja = "Teadmata tootja";
-
-            if (tooKirjeldus.contains("kiirtöö")){
-                tööLiik = "kiirtöö";
-            }
-            else if (tooKirjeldus.contains("tavatöö")){
-                tööLiik = "tavatöö";
-            } else {
-                tööLiik = "Vaikimisi tavatöö";
-            }
-
-            if (tooKirjeldus.contains("monitoriga")){
-                monitoriga = "monitoriga";
-            }
-
+            throw new FormaadiErind(tooKirjeldus, 1);
         }
 
         if (!tooKirjeldus.contains(";") && tooKirjeldus.contains("|")){
@@ -78,36 +60,13 @@ public class Arvutiparandus {
 
             if (!tööKijelduseOsad[0].equals("kiirtöö") &&
                     !tööKijelduseOsad[0].equals("tavatöö") &&
-                        !tööKijelduseOsad[0].equals("monitoriga") &&
-                            !(tööKijelduseOsad[0].contains("-") && tööKijelduseOsad[0].contains("T"))){
+                    !tööKijelduseOsad[0].equals("monitoriga") &&
+                    !(tööKijelduseOsad[0].contains("-") && tööKijelduseOsad[0].contains("T")) &&
+                    !tööKijelduseOsad[0].isEmpty()){
                 tootja = tööKijelduseOsad[0];
-                if (erindiPositsioon < 0){
-                    erindiPositsioon = 2;
-                    throw new FormaadiErind(tooKirjeldus, 2);
-                }
+                throw new FormaadiErind(tooKirjeldus, 2);
             } else {
-                if (erindiPositsioon < 0){
-                    tootja = "Teadmata tootja";
-                    erindiPositsioon = 1;
-                    throw new FormaadiErind(tooKirjeldus, 1);
-                }
-            }
-
-            try{
-                registreerimiseKuupäev = LocalDateTime.parse(tööKijelduseOsad[1].trim());
-            } catch(DateTimeParseException e){}
-
-            if (tooKirjeldus.contains("kiirtöö")){
-                tööLiik = "kiirtöö";
-            }
-            else if (tooKirjeldus.contains("tavatöö")){
-                tööLiik = "tavatöö";
-            } else {
-                tööLiik = "Vaikimisi tavatöö";
-            }
-
-            if (tooKirjeldus.contains("monitoriga")){
-                monitoriga = "monitoriga";
+                throw new FormaadiErind(tooKirjeldus, 1);
             }
         }
 
@@ -115,57 +74,39 @@ public class Arvutiparandus {
 
             String[] tööKijelduseOsad = tooKirjeldus.split(";");
 
-            if (!tööKijelduseOsad[0].equals("kiirtöö") &&
-                    !tööKijelduseOsad[0].equals("tavatöö") &&
+            if (tööKijelduseOsad.length > 0){
+                if (!tööKijelduseOsad[0].equals("kiirtöö") &&
+                        !tööKijelduseOsad[0].equals("tavatöö") &&
                         !tööKijelduseOsad[0].equals("monitoriga") &&
-                            !(tööKijelduseOsad[0].contains("-") && tööKijelduseOsad[0].contains("T"))){
-                tootja = tööKijelduseOsad[0];
-            } else {
-                if (erindiPositsioon < 0){
-                    tootja = "Teadmata tootja";
-                    erindiPositsioon = 1;
+                        !(tööKijelduseOsad[0].contains("-") && tööKijelduseOsad[0].contains("T")) &&
+                        !tööKijelduseOsad[0].isEmpty()){
+                    tootja = tööKijelduseOsad[0];
+                } else {
                     throw new FormaadiErind(tooKirjeldus, 1);
                 }
-            }
 
-            if (tööKijelduseOsad[1].equals("kiirtöö")){
-                tööLiik = "kiirtöö";
-            } else if (tööKijelduseOsad[1].equals("tavatöö")){
-                tööLiik = "tavatöö";
-            } else {
-                if (erindiPositsioon < 0){
-                    erindiPositsioon = 2;
-                    if (tooKirjeldus.contains("kiirtöö")){
-                        tööLiik = "kiirtöö";
-                    }
-                    else if (tooKirjeldus.contains("tavatöö")){
-                        tööLiik = "tavatöö";
-                    } else {
-                        tööLiik = "Vaikimisi tavatöö";
-                    }
+                if (tööKijelduseOsad[1].equals("kiirtöö")){
+                    tööLiik = "kiirtöö";
+                } else if (tööKijelduseOsad[1].equals("tavatöö")){
+                    tööLiik = "tavatöö";
+                } else {
                     throw new FormaadiErind(tooKirjeldus, 2);
                 }
-            }
 
-            if (tööKijelduseOsad.length == 3){
-                if (tööKijelduseOsad[2].equals("monitoriga")){
-                    monitoriga = "monitoriga";
-                } else {
-                    if (erindiPositsioon < 0){
-                        erindiPositsioon = 3;
-                        if (tooKirjeldus.contains("monitoriga")){
-                            monitoriga = "monitoriga";
-                        }
+                if (tööKijelduseOsad.length == 3){
+                    if (tööKijelduseOsad[2].equals("monitoriga")){
+                        monitoriga = "monitoriga";
+                    } else {
                         throw new FormaadiErind(tooKirjeldus, 3);
                     }
                 }
-            }
-            if (tööKijelduseOsad.length > 3){
-                if (erindiPositsioon < 0){
-                    erindiPositsioon = 3;
+                if (tööKijelduseOsad.length > 3){
                     throw new FormaadiErind(tooKirjeldus, 3);
                 }
+            } else {
+                throw new FormaadiErind(tooKirjeldus, 1);
             }
+
         }
 
         if (tooKirjeldus.contains(";") && tooKirjeldus.contains("|")){
@@ -175,48 +116,37 @@ public class Arvutiparandus {
             if (!tööKijelduseOsad[0].equals("kiirtöö") &&
                     !tööKijelduseOsad[0].equals("tavatöö") &&
                     !tööKijelduseOsad[0].equals("monitoriga") &&
-                    !(tööKijelduseOsad[0].contains("-") && tööKijelduseOsad[0].contains("T"))){
+                    !(tööKijelduseOsad[0].contains("-") && tööKijelduseOsad[0].contains("T")) &&
+                    !tööKijelduseOsad[0].isEmpty()){
                 tootja = tööKijelduseOsad[0];
             } else {
-                if (erindiPositsioon < 0){
-                    tootja = "Teadmata tootja";
-                    erindiPositsioon = 1;
-                    throw new FormaadiErind(tooKirjeldus, 1);
-                }
+                throw new FormaadiErind(tooKirjeldus, 1);
             }
 
             if (tööKijelduseOsad[1].contains("|")){
 
                 String[] veelTööKijelduseOsad = tööKijelduseOsad[1].split("\\|");
 
-                if (veelTööKijelduseOsad[0].equals("kiirtöö")){
-                    tööLiik = "kiirtöö";
-                } else if (veelTööKijelduseOsad[0].equals("tavatöö")){
-                    tööLiik = "tavatöö";
-                } else {
-                    if (erindiPositsioon < 0){
-                        erindiPositsioon = 2;
-                        if (tooKirjeldus.contains("kiirtöö")){
-                            tööLiik = "kiirtöö";
-                        }
-                        else if (tooKirjeldus.contains("tavatöö")){
-                            tööLiik = "tavatöö";
-                        } else {
-                            tööLiik = "Vaikimisi tavatöö";
-                        }
+                if (veelTööKijelduseOsad.length > 0){
+                    if (veelTööKijelduseOsad[0].equals("kiirtöö")){
+                        tööLiik = "kiirtöö";
+                    } else if (veelTööKijelduseOsad[0].equals("tavatöö")){
+                        tööLiik = "tavatöö";
+                    } else {
+                        throw new FormaadiErind(tooKirjeldus, 2);
                     }
-                    throw new FormaadiErind(tooKirjeldus, 2);
-                }
 
-                if (veelTööKijelduseOsad.length > 1){
-                    try{
-                        registreerimiseKuupäev = LocalDateTime.parse(veelTööKijelduseOsad[1].trim());
-                    } catch(DateTimeParseException e){
-                        //erindiPositsioon = 3;
+                    if (veelTööKijelduseOsad.length > 1){
+                        try{
+                            registreerimiseKuupäev = LocalDateTime.parse(veelTööKijelduseOsad[1].trim());
+                        } catch(DateTimeParseException e){
+                            throw new FormaadiErind(tooKirjeldus, 3);
+                        }
+                    } else {
                         throw new FormaadiErind(tooKirjeldus, 3);
                     }
                 } else {
-                    throw new FormaadiErind(tooKirjeldus, 3);
+                    throw new FormaadiErind(tooKirjeldus, 2);
                 }
 
             } else {
@@ -225,18 +155,7 @@ public class Arvutiparandus {
                 } else if (tööKijelduseOsad[1].equals("tavatöö")){
                     tööLiik = "tavatöö";
                 } else {
-                    if (erindiPositsioon < 0){
-                        //erindiPositsioon = 2;
-                        if (tooKirjeldus.contains("kiirtöö")){
-                            tööLiik = "kiirtöö";
-                        }
-                        else if (tooKirjeldus.contains("tavatöö")){
-                            tööLiik = "tavatöö";
-                        } else {
-                            tööLiik = "Vaikimisi tavatöö";
-                        }
-                        throw new FormaadiErind(tooKirjeldus, 2);
-                    }
+                    throw new FormaadiErind(tooKirjeldus, 2);
                 }
             }
 
@@ -246,48 +165,36 @@ public class Arvutiparandus {
 
                     String[] veelTööKijelduseOsad = tööKijelduseOsad[2].split("\\|");
 
-                    if (veelTööKijelduseOsad[0].equals("monitoriga")){
-                        monitoriga = "monitoriga";
-                    } else {
-                        if (erindiPositsioon < 0){
-                            //erindiPositsioon = 3;
-                            if (tooKirjeldus.contains("monitoriga")){
-                                monitoriga = "monitoriga";
-                            }
+                    if (veelTööKijelduseOsad.length > 0){
+                        if (veelTööKijelduseOsad[0].equals("monitoriga")){
+                            monitoriga = "monitoriga";
+                        } else {
                             throw new FormaadiErind(tooKirjeldus, 3);
                         }
-                    }
-                    if (veelTööKijelduseOsad.length > 1){
-                        try{
-                            registreerimiseKuupäev = LocalDateTime.parse(veelTööKijelduseOsad[1].trim());
-                        } catch(DateTimeParseException e){
-                            //erindiPositsioon = 4;
+                        if (veelTööKijelduseOsad.length > 1){
+                            try{
+                                registreerimiseKuupäev = LocalDateTime.parse(veelTööKijelduseOsad[1].trim());
+                            } catch(DateTimeParseException e){
+                                throw new FormaadiErind(tooKirjeldus, 4);
+                            }
+                        } else {
                             throw new FormaadiErind(tooKirjeldus, 4);
                         }
                     } else {
-                        throw new FormaadiErind(tooKirjeldus, 4);
+                        throw new FormaadiErind(tooKirjeldus, 3);
                     }
 
                 } else {
                     if (tööKijelduseOsad[2].equals("monitoriga")){
                         monitoriga = "monitoriga";
                     } else {
-                        if (erindiPositsioon < 0){
-                            //erindiPositsioon = 3;
-                            if (tooKirjeldus.contains("monitoriga")){
-                                monitoriga = "monitoriga";
-                            }
-                            throw new FormaadiErind(tooKirjeldus, 3);
-                        }
+                        throw new FormaadiErind(tooKirjeldus, 3);
                     }
                 }
             }
 
             if (tööKijelduseOsad.length > 3){
-                if (erindiPositsioon < 0){
-                    //erindiPositsioon = 3;
-                    throw new FormaadiErind(tooKirjeldus, 4);
-                }
+                throw new FormaadiErind(tooKirjeldus, 4);
             }
         }
 
