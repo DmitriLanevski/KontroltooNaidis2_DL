@@ -7,6 +7,7 @@ public class Arvuti {
     String tootja;
     String tooKirjeldus;
     LocalDateTime date;
+    Double arveSumma = null;
 
     public Arvuti(String tootja, String tooKirjeldus, LocalDateTime date) {
         this.tootja = tootja;
@@ -29,12 +30,25 @@ public class Arvuti {
         return date;
     }
 
-    public Double getArveSumma(){
-        return null;
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 
     public String arvutiToString(){
         return tootja + ";" + tooKirjeldus + "|" + date.toString();
+    }
+
+    public Double getArveSumma(){
+        return arveSumma;
+    }
+
+    public void lõpetaTöö(double baasHind) {
+        if (onKiirtöö()){
+            arveSumma = baasHind + 10 +2;
+        } else {
+            arveSumma = baasHind + 2;
+        }
+        arveSumma = Math.floor(arveSumma*100)/100;
     }
 
 }

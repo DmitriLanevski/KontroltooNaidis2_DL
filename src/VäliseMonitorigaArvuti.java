@@ -9,6 +9,16 @@ public class VäliseMonitorigaArvuti extends Arvuti{
     }
 
     @Override
+    public void lõpetaTöö(double baasHind) {
+        if (onKiirtöö()){
+            arveSumma = baasHind + 10 + 3;
+        } else {
+            arveSumma = baasHind + 3;
+        }
+        arveSumma = Math.floor(arveSumma*100)/100;
+    }
+
+    @Override
     public String arvutiToString() {
         return tootja + ";" + tooKirjeldus + ";" + "monitoriga" + "|" + date;
     }
